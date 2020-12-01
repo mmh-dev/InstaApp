@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import retrofit2.Call;
@@ -94,25 +97,43 @@ public class Register extends AppCompatActivity {
 
     private void register(String txt_username, String txt_email, String txt_password) {
 
-        User user = new User(txt_username, txt_password, txt_email);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://parseapi.back4app.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api api = retrofit.create(Api.class);
-        Call<User> call = api.createUser(1, user);
-        call.enqueue(new Callback<User>() {
+        ParseUser user = new ParseUser();
+        user.setUsername(txt_username);
+        user.setPassword(txt_password);
+        user.signUpInBackground(new SignUpCallback() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()){
+            public void done(ParseException e) {
+                if (e == null) {
                     Toast.makeText(Register.this, "User is registered!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Register.this, MainActivity.class));
+                } else {
+                    ParseUser.logOut();
+                    Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.i("error", t.getMessage());
-            }
         });
+
+
+
+//        User user = new User(txt_username, txt_password, txt_email);
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://parseapi.back4app.com")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        Api api = retrofit.create(Api.class);
+//        Call<User> call = api.createUser(1, user);
+//        call.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if (response.isSuccessful()){
+//                    Toast.makeText(Register.this, "User is registered!", Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(Register.this, MainActivity.class));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                Log.i("error", t.getMessage());
+//            }
+//        });
     }
 }

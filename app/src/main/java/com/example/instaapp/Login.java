@@ -11,6 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import retrofit2.Call;
@@ -56,24 +60,38 @@ public class Login extends AppCompatActivity {
     }
 
     private void login(String txt_username, String txt_password) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://parseapi.back4app.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        Api api = retrofit.create(Api.class);
-        Call<User> call = api.loggingIn(1, txt_username, txt_password);
-        call.enqueue(new Callback<User>() {
+        ParseUser.logInInBackground(txt_username, txt_password, new LogInCallback() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful()){
+            public void done(ParseUser parseUser, ParseException e) {
+                if (parseUser != null) {
                     Toast.makeText(Login.this, "User is Logged in!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Login.this, MainActivity.class));
+                } else {
+                    ParseUser.logOut();
+                    Toast.makeText(Login.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.i("error", t.getMessage());
-            }
         });
+
+
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://parseapi.back4app.com")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
+//        Api api = retrofit.create(Api.class);
+//        Call<User> call = api.loggingIn(1, txt_username, txt_password);
+//        call.enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if (response.isSuccessful()){
+//                    Toast.makeText(Login.this, "User is Logged in!", Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(Login.this, MainActivity.class));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                Log.i("error", t.getMessage());
+//            }
+//        });
     }
 }
