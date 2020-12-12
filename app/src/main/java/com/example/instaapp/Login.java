@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,19 +14,25 @@ import android.widget.Toast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
+
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class Login extends AppCompatActivity {
     MaterialEditText user_name, user_password;
     Button login_btn;
     TextView signup;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ParseUser user = ParseUser.getCurrentUser();
+        if (user != null) {
+            startActivity(new Intent(Login.this, MainActivity.class));
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

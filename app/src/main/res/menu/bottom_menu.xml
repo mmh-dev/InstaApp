@@ -4,8 +4,8 @@
     <item android:title="Home"
         android:icon="@drawable/ic_home"
         android:id="@+id/nav_home"/>
-    <item android:title="Add Photo"
-        android:icon="@drawable/ic_add_photo"
+    <item android:title="Add Post"
+        android:icon="@drawable/ic_add_box"
         android:id="@+id/nav_add_photo"/>
     <item android:title="Profile"
         android:icon="@drawable/ic_person"
